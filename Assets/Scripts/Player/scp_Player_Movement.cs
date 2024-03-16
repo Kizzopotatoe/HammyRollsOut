@@ -9,6 +9,8 @@ public class scp_Player_Movement : MonoBehaviour
     //Floats storing movement values
     private float horizontal;
     private float vertical;
+    private float horizontalRotation;
+    private float verticalRotation;
     public float speed = 10f;
     public float bounceUp = 10f;
     public float bounceDown = 10f;
@@ -31,9 +33,7 @@ public class scp_Player_Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Sets the hamsters  position to the same as this gameobject
-        hamster.transform.position = this.transform.position;
-
+        //Stores the direction of the camera as forward and right variables
         Vector3 camF = mainCamera.forward;
         Vector3 camR = mainCamera.right;
         camF.y = 0;
@@ -41,14 +41,29 @@ public class scp_Player_Movement : MonoBehaviour
         camF = camF.normalized;
         camR = camR.normalized;
 
-        //Adds force in a direction based on the player's inputs and speed
+        //Adds force to the player based on their inputs, speed, and camera direction
         rb.AddForce((camF*vertical + camR*horizontal) * speed);
+
+        Vector2 rotation = new Vector2(-verticalRotation, horizontalRotation) * 100f * Time.deltaTime;
+        hamster.Rotate(rotation);
+    }
+
+    void FixedUpdate()
+    {
+        //Sets the hamster's position to the same as this gameobject
+        hamster.transform.position = this.transform.position;
     }
 
     public void Roll(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;   
         vertical = context.ReadValue<Vector2>().y;  
+    }
+
+    public void Look(InputAction.CallbackContext context)
+    {
+        horizontalRotation = context.ReadValue<Vector2>().x;   
+        verticalRotation = context.ReadValue<Vector2>().y;  
     }
 
     public void Bounce(InputAction.CallbackContext context)

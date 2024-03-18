@@ -19,7 +19,8 @@ public class scp_Player_Movement : MonoBehaviour
     //References to objects and components
     public Rigidbody rb;
     public Transform mainCamera;
-    public Transform hamster;
+    public Transform root;
+    public Transform hammy;
     public Transform groundCheck;
     public LayerMask groundLayer;
 
@@ -32,10 +33,15 @@ public class scp_Player_Movement : MonoBehaviour
     }
 
     // Update is called once per frame
+    void Update()
+    {
+        //Sets the hamster model's position to the same as this gameobject
+        hammy.transform.position = this.transform.position;
+    }
     void FixedUpdate()
     {
         //Sets the hamster's position to the same as this gameobject
-        hamster.transform.position = this.transform.position;
+        root.transform.position = this.transform.position;
 
         //Stores the direction of the camera as forward and right variables
         Vector3 camF = mainCamera.forward;
@@ -50,21 +56,25 @@ public class scp_Player_Movement : MonoBehaviour
 
         //Controls camera rotation
         Vector2 rotation = new Vector2(-verticalRotation, horizontalRotation) * cameraSpeed * Time.deltaTime;
-        hamster.Rotate(rotation);
+        root.Rotate(rotation);
     }
 
+    //Reads the input values of the roll action and stores them as horizontal and vertical variables
     public void Roll(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;   
         vertical = context.ReadValue<Vector2>().y;  
     }
 
+    //Reads the input values of the look action and stores them as horizontal and vertical variables
     public void Look(InputAction.CallbackContext context)
     {
         horizontalRotation = context.ReadValue<Vector2>().x;   
         verticalRotation = context.ReadValue<Vector2>().y;  
     }
 
+    //If the context is performed while grounded, force is applied to the rigidbody upwards
+    //If the context is performed off the ground, force is applied to the rigidbody downwards
     public void Bounce(InputAction.CallbackContext context)
     {
         if(context.performed && IsGrounded())
@@ -77,6 +87,7 @@ public class scp_Player_Movement : MonoBehaviour
         }
     }
 
+    //Performing the context increases the rigidbody's drag variable, and cancelling it returns it to default
     public void Brake(InputAction.CallbackContext context)
     {
         if(context.performed && IsGrounded())
@@ -89,6 +100,8 @@ public class scp_Player_Movement : MonoBehaviour
         }
     }
 
+    //Creates a check sphere at the positon of the ground check transform, and returns the IsGrounded boolean
+    //if the sphere detects an object on the ground layer
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundCheck.position, 0.2f, groundLayer);

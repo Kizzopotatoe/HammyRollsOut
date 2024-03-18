@@ -156,7 +156,7 @@
                 {
                     "name": "",
                     "id": "a002d8fc-77ff-4b18-8f2a-6116ed9fdc1e",
-                    "path": "<Mouse>/delta",
+                    "path": "<Mouse>/radius",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",

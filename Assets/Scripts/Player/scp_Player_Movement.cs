@@ -11,13 +11,15 @@ public class scp_Player_Movement : MonoBehaviour
     private float vertical;
     private float horizontalRotation;
     private float verticalRotation;
+    [Header("Movement Values")]
     public float speed = 10f;
     public float cameraSpeed = 100f;
     public float bounceUp = 10f;
     public float bounceDown = 10f;
 
     //References to objects and components
-    public Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
+    [Header("References")]
     public Transform mainCamera;
     public Transform root;
     public Transform hammy;
